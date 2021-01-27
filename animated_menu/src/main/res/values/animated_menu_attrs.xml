@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="AnimatedMenu">
+        <attr name="backgroundColor" format="color" />
+        <attr name="header" format="reference"/>
+        <attr name="menu" format="reference"/>
+        <attr name="footer" format="reference"/>
+        <attr name="animationDuration" format="integer"/>
+    </declare-styleable>
+</resources>
