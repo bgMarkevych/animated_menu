@@ -32,7 +32,7 @@ class AnimatedMenuItemsAdapter
     }
 
     init {
-        items.sortedBy { it.order }
+        items = items.sortedBy { it.order }
     }
 
     private val customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?
