@@ -39,7 +39,7 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
     private val animationHandler = AnimationHandler(this)
     private var properties: AnimationProperties? = null
     private var menuItems: SparseArray<MenuItem>? = null
-    private lateinit var customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>
+    private var customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>? = null
 
     var animationDuration: Int = 300
 
@@ -161,10 +161,10 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
     }
 
     fun customizeItem(itemId: Int, customizer: AnimatedMenuAdapterItemCustomizer) {
-        if (!this::customizers.isInitialized) {
+        if (customizers == null) {
             customizers = SparseArray()
         }
-        customizers[itemId] = customizer
+        customizers!![itemId] = customizer
     }
 
     fun switchMenu() {

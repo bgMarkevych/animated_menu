@@ -15,17 +15,17 @@ class AnimatedMenuItemsAdapter
     : AbsAnimatedMenuItemsAdapter<AnimatedMenuItemsAdapter.AnimatedMenuItemViewHolder> {
 
     constructor(items: List<MenuItem>,
-                customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>) : super(items) {
+                customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?) : super(items) {
         this.customizers = customizers
     }
 
     constructor(items: List<MenuItem>,
-                customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>,
+                customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?,
                 itemClickListener: AnimatedMenuItemClickListener?) : super(items, itemClickListener) {
         this.customizers = customizers
     }
 
-    private val customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>
+    private val customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimatedMenuItemViewHolder {
         return AnimatedMenuItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.animated_menu_item, parent, false))
@@ -39,6 +39,6 @@ class AnimatedMenuItemsAdapter
     override fun bind(holder: AnimatedMenuItemViewHolder, item: MenuItem) {
         holder.icon.setImageDrawable(item.icon)
         holder.title.text = item.title
-        customizers[item.itemId]?.customize(holder)
+        customizers?.get(item.itemId)?.customize(holder)
     }
 }
