@@ -1,10 +1,7 @@
 package com.lib.animated_menu
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Path
-import android.graphics.RectF
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.*
@@ -21,6 +18,8 @@ import com.lib.animated_menu.menu_list.AbsAnimatedMenuItemsAdapter
 import com.lib.animated_menu.menu_list.AnimatedMenuItemClickListener
 import com.lib.animated_menu.menu_list.AnimatedMenuItemsAdapter
 import com.lib.animated_menu.utils.values
+
+const val SHADOW_PADDING = 5
 
 class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListener {
 
@@ -72,7 +71,7 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
         val menuRes = typedArray.getResourceId(R.styleable.AnimatedMenu_menu, 0)
         menuItems = parseMenuItems(menuRes)
 
-        if (menuItems != null){
+        if (menuItems != null) {
             menuListAdapter = AnimatedMenuItemsAdapter(menuItems!!.values(), customizers, menuItemClickListener)
         }
 
@@ -94,7 +93,7 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
     }
 
     private fun parseMenuItems(menuRes: Int): SparseArray<MenuItem>? {
-        if (menuRes == 0){
+        if (menuRes == 0) {
             return null
         }
         val popup = PopupMenu(context, this)
@@ -117,7 +116,6 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
 
         if (properties != null && indexOfChild == 1) {
             val path = Path()
-
             val left = properties!!.x + properties!!.corners / 2
             val top = properties!!.y + properties!!.corners
             val right = canvas!!.width.toFloat() + properties!!.x
@@ -127,10 +125,19 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
             path.addRoundRect(rect, properties!!.corners, properties!!.corners, Path.Direction.CW)
             path.close()
 
+            val shadowRect = RectF(left + SHADOW_PADDING, top + SHADOW_PADDING, right, bottom - SHADOW_PADDING)
+            val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+            shadowPaint.setShadowLayer(properties!!.corners, 0f, 0f, Color.BLACK)
+
+            canvas.drawRoundRect(shadowRect, properties!!.corners, properties!!.corners, shadowPaint)
+
             val save = canvas.save()
             canvas.clipPath(path)
+
             val result = super.drawChild(canvas, child, drawingTime)
             canvas.restoreToCount(save)
+
+
             return result
         }
 

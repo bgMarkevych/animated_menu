@@ -10,7 +10,7 @@ abstract class AbsAnimatedMenuItemsAdapter<T : RecyclerView.ViewHolder> : Recycl
         this.itemClickListener = itemClickListener
     }
 
-    private var items: List<MenuItem>
+    protected var items: List<MenuItem>
     var itemClickListener: AnimatedMenuItemClickListener? = null
 
     override fun getItemCount(): Int {

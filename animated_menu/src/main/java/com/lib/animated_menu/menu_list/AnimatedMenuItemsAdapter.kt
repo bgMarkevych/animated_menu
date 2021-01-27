@@ -10,25 +10,37 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lib.animated_menu.R
 import com.lib.animated_menu.item_customizer.AnimatedMenuAdapterItemCustomizer
+import java.util.*
+import kotlin.Comparator
 
 class AnimatedMenuItemsAdapter
     : AbsAnimatedMenuItemsAdapter<AnimatedMenuItemsAdapter.AnimatedMenuItemViewHolder> {
 
-    constructor(items: List<MenuItem>,
-                customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?) : super(items) {
+    constructor(
+        items: List<MenuItem>,
+        customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?
+    ) : super(items) {
         this.customizers = customizers
     }
 
-    constructor(items: List<MenuItem>,
-                customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?,
-                itemClickListener: AnimatedMenuItemClickListener?) : super(items, itemClickListener) {
+    constructor(
+        items: List<MenuItem>,
+        customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?,
+        itemClickListener: AnimatedMenuItemClickListener?
+    ) : super(items, itemClickListener) {
         this.customizers = customizers
+    }
+
+    init {
+        items.sortedBy { it.order }
     }
 
     private val customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimatedMenuItemViewHolder {
-        return AnimatedMenuItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.animated_menu_item, parent, false))
+        return AnimatedMenuItemViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.animated_menu_item, parent, false)
+        )
     }
 
     inner class AnimatedMenuItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
