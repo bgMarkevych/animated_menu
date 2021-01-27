@@ -1,2 +1,2 @@
-# animater_menu
+# animated_menu
 Android animated drawer menu
