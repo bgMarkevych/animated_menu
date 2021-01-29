@@ -12,8 +12,22 @@ const val SCALE_FACTOR = 0.9f
 
 class AnimationHandler(private val listener: AnimationListener) {
 
+    companion object {
+
+        fun getOpenedStateAnimationProperties(view: View, cornerRadius: Int): AnimationProperties {
+            val properties = AnimationProperties()
+            properties.apply {
+                this.x = view.width - view.width * TRANSLATION_X_COEFFICIENT
+                this.y = view.height * TRANSLATION_Y_COEFFICIENT
+                this.scale = SCALE_FACTOR
+                this.corners = cornerRadius.toFloat()
+            }
+            return properties
+        }
+
+    }
+
     var isMenuOpened: Boolean = false
-        private set
 
     private val animationProperties = AnimationProperties()
 

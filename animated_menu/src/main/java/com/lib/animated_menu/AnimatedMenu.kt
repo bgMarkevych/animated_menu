@@ -2,12 +2,14 @@ package com.lib.animated_menu
 
 import android.content.Context
 import android.graphics.*
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.SparseArray
 import android.view.*
 import android.widget.FrameLayout
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.util.set
+import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lib.animated_menu.animation.AnimationHandler
@@ -17,6 +19,7 @@ import com.lib.animated_menu.item_customizer.AnimatedMenuAdapterItemCustomizer
 import com.lib.animated_menu.menu_list.AbsAnimatedMenuItemsAdapter
 import com.lib.animated_menu.menu_list.AnimatedMenuItemClickListener
 import com.lib.animated_menu.menu_list.AnimatedMenuItemsAdapter
+import com.lib.animated_menu.state.AnimationMenuSavedState
 import com.lib.animated_menu.utils.values
 
 const val SHADOW_PADDING = 5
@@ -62,9 +65,11 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
 
     var animationDuration: Int = 300
 
-    var isMenuOpened: Boolean = false
+    var isMenuOpened: Boolean
         get() = animationHandler.isMenuOpened
-        private set
+        private set(value) {
+            animationHandler.isMenuOpened = value
+        }
 
     var menuItemClickListener: AnimatedMenuItemClickListener? = null
 
@@ -244,6 +249,31 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
         animationHandler.closeMenu(getChildAt(1), animationDuration)
         if (menuItemClickListener != null) {
             menuItemClickListener!!.onMenuItemClick(id)
+        }
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        val state = AnimationMenuSavedState(super.onSaveInstanceState())
+        state.isOpened = isMenuOpened
+        return state
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+
+        val animationMenuSavedState = state as AnimationMenuSavedState
+        super.onRestoreInstanceState(animationMenuSavedState.superState)
+
+        isMenuOpened = animationMenuSavedState.isOpened
+
+        if (isMenuOpened) {
+            getChildAt(1).doOnPreDraw {
+                onAnimation(
+                    AnimationHandler.getOpenedStateAnimationProperties(
+                        this,
+                        cornersRadius
+                    )
+                )
+            }
         }
     }
 
