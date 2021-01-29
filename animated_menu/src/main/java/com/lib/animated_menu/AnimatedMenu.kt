@@ -20,25 +20,45 @@ import com.lib.animated_menu.menu_list.AnimatedMenuItemsAdapter
 import com.lib.animated_menu.utils.values
 
 const val SHADOW_PADDING = 5
+const val CORNER_RADIUS = 100
 
 class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListener {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : this(context, attrs, defStyleAttr, 0)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : this(
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(
+        context,
+        attrs,
+        defStyleAttr,
+        defStyleRes
+    ) {
         obtainAttributes(context, attrs, defStyleAttr, defStyleRes)
     }
 
     init {
         val menuLayout = LayoutInflater.from(context).inflate(R.layout.animated_menu, this, false)
-        addViewInLayout(menuLayout, 0, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+        addViewInLayout(
+            menuLayout,
+            0,
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        )
     }
 
     private val animationHandler = AnimationHandler(this)
     private var properties: AnimationProperties? = null
     private var menuItems: SparseArray<MenuItem>? = null
     private var customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>? = null
+
+    var shadowColor: Int = Color.BLACK
+
+    var cornersRadius: Int = CORNER_RADIUS
 
     var animationDuration: Int = 300
 
@@ -57,8 +77,18 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
             recycler.layoutManager = LinearLayoutManager(context)
         }
 
-    private fun obtainAttributes(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.AnimatedMenu, defStyleAttr, defStyleRes)
+    private fun obtainAttributes(
+        context: Context,
+        attrs: AttributeSet,
+        defStyleAttr: Int,
+        defStyleRes: Int
+    ) {
+        val typedArray = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.AnimatedMenu,
+            defStyleAttr,
+            defStyleRes
+        )
 
         animationDuration = typedArray.getInteger(R.styleable.AnimatedMenu_animationDuration, 500)
 
@@ -72,10 +102,20 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
         menuItems = parseMenuItems(menuRes)
 
         if (menuItems != null) {
-            menuListAdapter = AnimatedMenuItemsAdapter(menuItems!!.values(), customizers, menuItemClickListener)
+            menuListAdapter =
+                AnimatedMenuItemsAdapter(menuItems!!.values(), customizers, menuItemClickListener)
         }
 
-        setBackgroundColor(typedArray.getColor(R.styleable.AnimatedMenu_backgroundColor, Color.WHITE))
+        setBackgroundColor(
+            typedArray.getColor(
+                R.styleable.AnimatedMenu_backgroundColor,
+                Color.WHITE
+            )
+        )
+
+        shadowColor = typedArray.getColor(R.styleable.AnimatedMenu_shadowColor, Color.BLACK)
+
+        cornersRadius = typedArray.getColor(R.styleable.AnimatedMenu_cornersRadius, CORNER_RADIUS)
 
         typedArray.recycle()
 
@@ -116,20 +156,26 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
 
         if (properties != null && indexOfChild == 1) {
             val path = Path()
-            val left = properties!!.x + properties!!.corners / 2
-            val top = properties!!.y + properties!!.corners
+            val left = properties!!.x
+            val top = properties!!.y / 2f
             val right = canvas!!.width.toFloat() + properties!!.x
-            val bottom = canvas.height.toFloat() - properties!!.corners
+            val bottom = canvas.height.toFloat() - properties!!.y / 2f
 
             val rect = RectF(left, top, right, bottom)
             path.addRoundRect(rect, properties!!.corners, properties!!.corners, Path.Direction.CW)
             path.close()
 
-            val shadowRect = RectF(left + SHADOW_PADDING, top + SHADOW_PADDING, right, bottom - SHADOW_PADDING)
+            val shadowRect =
+                RectF(left + SHADOW_PADDING, top + SHADOW_PADDING, right, bottom - SHADOW_PADDING)
             val shadowPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-            shadowPaint.setShadowLayer(properties!!.corners, 0f, 0f, Color.BLACK)
+            shadowPaint.setShadowLayer(properties!!.corners, 0f, 0f, shadowColor)
 
-            canvas.drawRoundRect(shadowRect, properties!!.corners, properties!!.corners, shadowPaint)
+            canvas.drawRoundRect(
+                shadowRect,
+                properties!!.corners,
+                properties!!.corners,
+                shadowPaint
+            )
 
             val save = canvas.save()
             canvas.clipPath(path)
@@ -176,7 +222,7 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
 
     fun switchMenu() {
         if (!isMenuOpened) {
-            animationHandler.openMenu(getChildAt(1), animationDuration)
+            animationHandler.openMenu(getChildAt(1), animationDuration, cornersRadius)
             return
         }
         animationHandler.closeMenu(getChildAt(1), animationDuration)
@@ -188,8 +234,7 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
         child?.scaleX = properties.scale
         child?.scaleY = properties.scale
 
-        child?.x = properties.x
-        child?.y = properties.y
+        child?.x = properties.x - (properties.x - properties.x * properties.scale)
 
         this.properties = properties
         invalidate()

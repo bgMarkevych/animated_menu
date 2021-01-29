@@ -2,9 +2,11 @@
 <resources>
     <declare-styleable name="AnimatedMenu">
         <attr name="backgroundColor" format="color" />
+        <attr name="shadowColor" format="color" />
         <attr name="header" format="reference"/>
         <attr name="menu" format="reference"/>
         <attr name="footer" format="reference"/>
         <attr name="animationDuration" format="integer"/>
+        <attr name="cornersRadius" format="integer"/>
     </declare-styleable>
 </resources>

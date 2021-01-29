@@ -10,7 +10,9 @@
         android:id="@+id/menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/backgroundColor">
+        app:backgroundColor="@color/backgroundColor"
+        app:cornersRadius="100"
+        app:shadowColor="#14000000">
 
         <FrameLayout
             android:layout_width="match_parent"

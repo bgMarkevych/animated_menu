@@ -7,9 +7,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 
 
 const val TRANSLATION_X_COEFFICIENT = 0.25f
-const val TRANSLATION_Y_COEFFICIENT = 0.003f
+const val TRANSLATION_Y_COEFFICIENT = 0.1f
 const val SCALE_FACTOR = 0.9f
-const val CORNERS_MAX = 100f
 
 class AnimationHandler(private val listener: AnimationListener) {
 
@@ -18,29 +17,33 @@ class AnimationHandler(private val listener: AnimationListener) {
 
     private val animationProperties = AnimationProperties()
 
-    fun openMenu(view: View, duration: Int) {
+    fun openMenu(view: View, duration: Int, cornerRadius: Int) {
         isMenuOpened = true
 
         val animatorsSet = AnimatorSet()
         animatorsSet.interpolator = AccelerateDecelerateInterpolator()
 
         val scaleAnimator = ValueAnimator.ofFloat(animationProperties.scale, SCALE_FACTOR)
-                .setDuration(duration.toLong())
+            .setDuration(duration.toLong())
         scaleAnimator.apply {
             this.addUpdateListener {
                 animationProperties.scale = it.animatedValue as Float
             }
         }
 
-        val xAnimator = ValueAnimator.ofFloat(animationProperties.x, view.width - view.width * TRANSLATION_X_COEFFICIENT)
-                .setDuration(duration.toLong())
+        val xAnimator = ValueAnimator.ofFloat(
+            animationProperties.x,
+            view.width - view.width * TRANSLATION_X_COEFFICIENT
+        )
+            .setDuration(duration.toLong())
         xAnimator.apply {
             this.addUpdateListener {
                 animationProperties.x = it.animatedValue as Float
             }
         }
 
-        val yAnimator = ValueAnimator.ofFloat(animationProperties.y, view.height * TRANSLATION_Y_COEFFICIENT)
+        val yAnimator =
+            ValueAnimator.ofFloat(animationProperties.y, view.height * TRANSLATION_Y_COEFFICIENT)
                 .setDuration(duration.toLong())
         yAnimator.apply {
             this.addUpdateListener {
@@ -48,7 +51,8 @@ class AnimationHandler(private val listener: AnimationListener) {
             }
         }
 
-        val cornerAnimator = ValueAnimator.ofFloat(animationProperties.corners, CORNERS_MAX)
+        val cornerAnimator =
+            ValueAnimator.ofFloat(animationProperties.corners, cornerRadius.toFloat())
                 .setDuration(duration.toLong())
         cornerAnimator.apply {
             this.addUpdateListener {
@@ -68,7 +72,7 @@ class AnimationHandler(private val listener: AnimationListener) {
         animatorsSet.interpolator = AccelerateDecelerateInterpolator()
 
         val scaleAnimator = ValueAnimator.ofFloat(animationProperties.scale, 1f)
-                .setDuration(duration.toLong())
+            .setDuration(duration.toLong())
         scaleAnimator.apply {
             this.addUpdateListener {
                 animationProperties.scale = it.animatedValue as Float
@@ -76,7 +80,7 @@ class AnimationHandler(private val listener: AnimationListener) {
         }
 
         val xAnimator = ValueAnimator.ofFloat(animationProperties.x, 0f)
-                .setDuration(duration.toLong())
+            .setDuration(duration.toLong())
         xAnimator.apply {
             this.addUpdateListener {
                 animationProperties.x = it.animatedValue as Float
@@ -84,7 +88,7 @@ class AnimationHandler(private val listener: AnimationListener) {
         }
 
         val yAnimator = ValueAnimator.ofFloat(animationProperties.y, 0f)
-                .setDuration(duration.toLong())
+            .setDuration(duration.toLong())
         yAnimator.apply {
             this.addUpdateListener {
                 animationProperties.y = it.animatedValue as Float
@@ -92,7 +96,7 @@ class AnimationHandler(private val listener: AnimationListener) {
         }
 
         val cornerAnimator = ValueAnimator.ofFloat(animationProperties.corners, 0f)
-                .setDuration(duration.toLong())
+            .setDuration(duration.toLong())
         cornerAnimator.apply {
             this.addUpdateListener {
                 animationProperties.corners = it.animatedValue as Float
