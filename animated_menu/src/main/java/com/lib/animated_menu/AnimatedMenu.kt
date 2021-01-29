@@ -16,6 +16,7 @@ import com.lib.animated_menu.animation.AnimationHandler
 import com.lib.animated_menu.animation.AnimationListener
 import com.lib.animated_menu.animation.AnimationProperties
 import com.lib.animated_menu.item_customizer.AnimatedMenuAdapterItemCustomizer
+import com.lib.animated_menu.item_customizer.ItemsCustomizersProvider
 import com.lib.animated_menu.menu_list.AbsAnimatedMenuItemsAdapter
 import com.lib.animated_menu.menu_list.AnimatedMenuItemClickListener
 import com.lib.animated_menu.menu_list.AnimatedMenuItemsAdapter
@@ -25,7 +26,8 @@ import com.lib.animated_menu.utils.values
 const val SHADOW_PADDING = 5
 const val CORNER_RADIUS = 100
 
-class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListener {
+class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListener,
+    ItemsCustomizersProvider {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
@@ -108,7 +110,7 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
 
         if (menuItems != null) {
             menuListAdapter =
-                AnimatedMenuItemsAdapter(menuItems!!.values(), customizers, menuItemClickListener)
+                AnimatedMenuItemsAdapter(menuItems!!.values(), this, menuItemClickListener)
         }
 
         setBackgroundColor(
@@ -275,6 +277,14 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
                 )
             }
         }
+    }
+
+    override fun getCustomizers(): SparseArray<AnimatedMenuAdapterItemCustomizer>? {
+        return customizers
+    }
+
+    override fun getCustomizer(id: Int): AnimatedMenuAdapterItemCustomizer? {
+        return customizers?.get(id)
     }
 
 }

@@ -9,33 +9,31 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lib.animated_menu.R
-import com.lib.animated_menu.item_customizer.AnimatedMenuAdapterItemCustomizer
-import java.util.*
-import kotlin.Comparator
+import com.lib.animated_menu.item_customizer.ItemsCustomizersProvider
 
 class AnimatedMenuItemsAdapter
     : AbsAnimatedMenuItemsAdapter<AnimatedMenuItemsAdapter.AnimatedMenuItemViewHolder> {
 
     constructor(
         items: List<MenuItem>,
-        customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?
+        customizersProvider: ItemsCustomizersProvider
     ) : super(items) {
-        this.customizers = customizers
+        this.customizersProvider = customizersProvider
     }
 
     constructor(
         items: List<MenuItem>,
-        customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?,
+        customizersProvider: ItemsCustomizersProvider,
         itemClickListener: AnimatedMenuItemClickListener?
     ) : super(items, itemClickListener) {
-        this.customizers = customizers
+        this.customizersProvider = customizersProvider
     }
 
     init {
         items = items.sortedBy { it.order }
     }
 
-    private val customizers: SparseArray<AnimatedMenuAdapterItemCustomizer>?
+    private val customizersProvider: ItemsCustomizersProvider
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimatedMenuItemViewHolder {
         return AnimatedMenuItemViewHolder(
@@ -51,6 +49,6 @@ class AnimatedMenuItemsAdapter
     override fun bind(holder: AnimatedMenuItemViewHolder, item: MenuItem) {
         holder.icon.setImageDrawable(item.icon)
         holder.title.text = item.title
-        customizers?.get(item.itemId)?.customize(holder)
+        customizersProvider.getCustomizer(item.itemId)?.customize(holder)
     }
 }
