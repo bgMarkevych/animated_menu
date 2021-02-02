@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
 }
 
@@ -11,7 +11,6 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
-        applicationId = "com.animated_menu"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
