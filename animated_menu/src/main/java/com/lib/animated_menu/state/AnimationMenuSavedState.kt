@@ -19,7 +19,6 @@ class AnimationMenuSavedState : View.BaseSavedState {
     var isOpened = false
 
     override fun writeToParcel(out: Parcel?, flags: Int) {
-        super.writeToParcel(out, flags)
         out?.writeInt(if (isOpened) 1 else 0)
     }
 

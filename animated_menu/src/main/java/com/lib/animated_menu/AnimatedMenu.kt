@@ -267,10 +267,9 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
             return
         }
 
-        val animationMenuSavedState = state as AnimationMenuSavedState
-        super.onRestoreInstanceState(animationMenuSavedState.superState)
+        super.onRestoreInstanceState(state.superState)
 
-        isMenuOpened = animationMenuSavedState.isOpened
+        isMenuOpened = state.isOpened
 
         if (isMenuOpened) {
             getChildAt(1).doOnPreDraw {
