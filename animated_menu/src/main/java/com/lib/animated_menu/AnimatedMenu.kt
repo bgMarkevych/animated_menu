@@ -262,6 +262,11 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
 
     override fun onRestoreInstanceState(state: Parcelable?) {
 
+        if (state !is AnimationMenuSavedState) {
+            super.onRestoreInstanceState(state)
+            return
+        }
+
         val animationMenuSavedState = state as AnimationMenuSavedState
         super.onRestoreInstanceState(animationMenuSavedState.superState)
 
