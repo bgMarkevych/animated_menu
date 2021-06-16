@@ -254,34 +254,34 @@ class AnimatedMenu : FrameLayout, AnimationListener, AnimatedMenuItemClickListen
         }
     }
 
-    override fun onSaveInstanceState(): Parcelable? {
-        val state = AnimationMenuSavedState(super.onSaveInstanceState())
-        state.isOpened = isMenuOpened
-        return state
-    }
-
-    override fun onRestoreInstanceState(state: Parcelable?) {
-
-        if (state !is AnimationMenuSavedState) {
-            super.onRestoreInstanceState(state)
-            return
-        }
-
-        super.onRestoreInstanceState(state.superState)
-
-        isMenuOpened = state.isOpened
-
-        if (isMenuOpened) {
-            getChildAt(1).doOnPreDraw {
-                onAnimation(
-                    AnimationHandler.getOpenedStateAnimationProperties(
-                        this,
-                        cornersRadius
-                    )
-                )
-            }
-        }
-    }
+//    override fun onSaveInstanceState(): Parcelable? {
+//        val state = AnimationMenuSavedState(super.onSaveInstanceState())
+//        state.isOpened = isMenuOpened
+//        return state
+//    }
+//
+//    override fun onRestoreInstanceState(state: Parcelable?) {
+//
+//        if (state !is AnimationMenuSavedState) {
+//            super.onRestoreInstanceState(state)
+//            return
+//        }
+//
+//        super.onRestoreInstanceState(state.superState)
+//
+//        isMenuOpened = state.isOpened
+//
+//        if (isMenuOpened) {
+//            getChildAt(1).doOnPreDraw {
+//                onAnimation(
+//                    AnimationHandler.getOpenedStateAnimationProperties(
+//                        this,
+//                        cornersRadius
+//                    )
+//                )
+//            }
+//        }
+//    }
 
     override fun getCustomizers(): SparseArray<AnimatedMenuAdapterItemCustomizer>? {
         return customizers
